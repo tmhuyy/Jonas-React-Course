@@ -4,13 +4,20 @@ const starStyle = {
   display: "block",
   cursor: "pointer",
 };
-const Star = function ({ value, onRate, full }) {
+
+const Star = function ({ value, onRate, full, onHoverIn, onHoverOut }) {
   const clickHandler = function () {
     onRate(value);
   };
 
   return (
-    <span role="button" style={starStyle} onClick={clickHandler}>
+    <span
+      role="button"
+      style={starStyle}
+      onClick={clickHandler}
+      onMouseEnter={onHoverIn}
+      onMouseLeave={onHoverOut}
+    >
       {full ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
