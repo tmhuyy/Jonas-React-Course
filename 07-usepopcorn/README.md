@@ -1,70 +1,58 @@
-# Getting Started with Create React App
+Section 12: Effects and Data Fetching
+B140/ Intro
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+- useEffect
 
-## Available Scripts
+B141/ The component lifecycle
 
-In the project directory, you can run:
+- different state of the component instance
 
-### `npm start`
+1. Mount(born) / Initial render (very first time)
+2. re-render (state / props / context update, parent com
+   re-render)
+3. UnMount(die) (component instance is completely
+   destroyed and removed => state and props are destroyed
+   too) EXAMPLE:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+==> we define code to run at specific points in
+time
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+B142/ How NOT to Fetch Data in React
+=> it crashes the app, when fetching data and setting
+state => infinite loop => never setState in render
+logic
+=> need set into useEffect hook
 
-### `npm test`
+B143/ useEffect to the Rescue
+useEffect(function(){}, [])
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+B144/ A First Look at Effects
 
-### `npm run build`
+- side effect -> interaction btw react component to
+  the world outside the component
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+* happend in 2 places
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. event handler
+2. useEffect Hook
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- effect keep the code sync at different points
+  with some external sys
+  B145/ Using an async Function
 
-### `npm run eject`
+* in React 18, useEffect will be called 2 times.
+* Just in the development, when it becomes to
+  the production, its no longer be a problem
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+B146/ Adding a Loading State
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+B147/ Handling Errors
+try {} catch(err){};
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- deal with:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. loading movement
+2. error existed movement
+   2.1) internet can not be connected
+   2.2) movies not found
+3. found movies movement

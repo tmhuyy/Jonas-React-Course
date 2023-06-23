@@ -1,6 +1,6 @@
 import MovieItem from "./MovieItem";
 
-const MovieList = function ({ movies }) {
+const MovieList = function ({ movies, isLoading }) {
   return (
     <ul className="list">
       {movies?.map((movie) => (

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NavBar from "./components/NavBar/NavBar";
 import Main from "./components/Main/Main";
 import SearchBar from "./components/NavBar/SearchBar";
@@ -54,13 +54,40 @@ const tempWatchedData = [
   },
 ];
 const KEY = "39c21a43";
-function App() {
-  const [movies, setMovies] = useState(tempMovieData);
-  const [watched, setWatched] = useState(tempWatchedData);
 
-  fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=interstellar`)
-    .then((res) => res.json())
-    .then((data) => console.log(data));
+function App() {
+  // run when component first mount -> render logic
+  // never
+  const [movies, setMovies] = useState([]);
+  const [watched, setWatched] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const getData = async function () {
+      try {
+        setIsLoading(true);
+        const res = await fetch(
+          `http://www.omdbapi.com/?apikey=${KEY}&s=demon`
+        );
+        if (!res.ok) {
+          throw new Error("Something Went Wrong !!!");
+        }
+        const data = await res.json();
+        if (data.Response === "False") {
+          throw new Error("Can not found any movies !!!");
+        }
+        setMovies(data.Search);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    getData();
+  }, []);
+
+  //
   return (
     <>
       <NavBar>
@@ -69,7 +96,9 @@ function App() {
       </NavBar>
       <Main>
         <Box>
-          <MovieList movies={movies} />
+          {isLoading && <p className="loader">Loading.....</p>}
+          {error && <p className="error">{error}</p>}
+          {!isLoading && !error && <MovieList movies={movies} />}
         </Box>
         <Box>
           <Summary watched={watched} />
