@@ -53,11 +53,17 @@ const tempWatchedData = [
     userRating: 9,
   },
 ];
-
+const KEY = "a86a9dce";
 function App() {
   const [movies, setMovies] = useState(tempMovieData);
   const [watched, setWatched] = useState(tempWatchedData);
+  const getData = async function () {
+    const req = await fetch(`http://www.omdbapi.com/?apikey=${KEY}`);
 
+    const data = await req.json();
+    console.log(data);
+  };
+  getData();
   return (
     <>
       <NavBar>
