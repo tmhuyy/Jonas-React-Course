@@ -1,6 +1,9 @@
-const MovieItem = function ({ movie }) {
+const MovieItem = function ({ movie, onSelectedIdHandler }) {
   return (
-    <li>
+    <li
+      role="button"
+      onClick={onSelectedIdHandler.bind(null, movie.imdbID, movie.Title)}
+    >
       <img src={movie.Poster} alt={`${movie.Title} poster`} />
       <h3>{movie.Title}</h3>
       <div>

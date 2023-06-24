@@ -1,10 +1,14 @@
 import MovieItem from "./MovieItem";
 
-const MovieList = function ({ movies, isLoading }) {
+const MovieList = function ({ movies, isLoading, onSelectedIdHandler }) {
   return (
-    <ul className="list">
+    <ul className="list list-movies">
       {movies?.map((movie) => (
-        <MovieItem key={movie.imdbID} movie={movie} />
+        <MovieItem
+          key={movie.imdbID}
+          movie={movie}
+          onSelectedIdHandler={onSelectedIdHandler}
+        />
       ))}
     </ul>
   );

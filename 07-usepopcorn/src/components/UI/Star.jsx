@@ -1,10 +1,3 @@
-const starStyle = {
-  width: "48px",
-  height: "48px",
-  display: "block",
-  cursor: "pointer",
-};
-
 const Star = function ({
   value,
   onRate,
@@ -14,6 +7,12 @@ const Star = function ({
   color,
   size,
 }) {
+  const starStyle = {
+    width: `${size}px`,
+    height: `${size}px`,
+    display: "block",
+    cursor: "pointer",
+  };
   const clickHandler = function () {
     onRate(value);
   };
