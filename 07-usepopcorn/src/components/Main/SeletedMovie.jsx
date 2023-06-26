@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import StartRating from "../UI/StartRating";
 const KEY = "39c21a43";
 
@@ -11,7 +11,8 @@ const SeletedMovie = function ({
   const [movie, setMovie] = useState({});
   const [rating, setRating] = useState(undefined);
   const [isLoading, setIsLoading] = useState(false);
-  const [addedMovie, setAddedMovie] = useState({});
+
+  const countTimeClickRating = useRef(0);
 
   const selectedMovie = watched
     .filter((movie) => movie.imdbID === selectedId)
@@ -25,6 +26,7 @@ const SeletedMovie = function ({
       runtime: runtime,
       imdbRating: +movie.imdbRating,
       userRating: rating,
+      countTimeClickRating: countTimeClickRating.current,
     };
     onAddMovie(addMovie);
   };
@@ -68,6 +70,10 @@ const SeletedMovie = function ({
       document.removeEventListener("keydown", escapeCloseMovie);
     };
   }, [onRemoveSelectedId]);
+
+  useEffect(() => {
+    if (rating) countTimeClickRating.current += 1;
+  }, [rating]);
 
   const contentContainer = (
     <>
