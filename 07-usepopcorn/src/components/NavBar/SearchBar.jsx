@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 
 const SearchBar = function ({ onSetQueryMovie, queryMovie }) {
   const inputEl = useRef(null);
