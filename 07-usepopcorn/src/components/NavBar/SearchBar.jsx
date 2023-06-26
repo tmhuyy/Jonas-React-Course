@@ -1,24 +1,29 @@
 import { useRef, useEffect } from "react";
+import { useKeyPress } from "../../hooks/useKeyPress";
 
 const SearchBar = function ({ onSetQueryMovie, queryMovie }) {
   const inputEl = useRef(null);
+
+  const focusSearchBar = function (e) {
+    if (document.activeElement === inputEl.current) return;
+    if (e.key === "Enter") {
+      inputEl.current.focus();
+      onSetQueryMovie("");
+    }
+  };
+
+  useKeyPress("keydown", focusSearchBar);
   useEffect(() => {
     inputEl.current.focus();
   }, []);
 
-  useEffect(() => {
-    const callback = function (e) {
-      if (document.activeElement === inputEl.current) return;
-      if (e.key === "Enter") {
-        inputEl.current.focus();
-        onSetQueryMovie("");
-      }
-    };
-    document.addEventListener("keydown", callback);
-    return () => {
-      document.removeEventListener("keydown", callback);
-    };
-  }, [onSetQueryMovie]);
+  // useEffect(() => {
+
+  //   document.addEventListener("keydown", callback);
+  //   return () => {
+  //     document.removeEventListener("keydown", callback);
+  //   };
+  // }, [onSetQueryMovie]);
 
   return (
     <input

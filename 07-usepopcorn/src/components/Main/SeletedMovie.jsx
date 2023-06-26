@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import StartRating from "../UI/StartRating";
+import { useKeyPress } from "../../hooks/useKeyPress";
 const KEY = "39c21a43";
 
 const SeletedMovie = function ({
@@ -31,6 +32,13 @@ const SeletedMovie = function ({
     onAddMovie(addMovie);
   };
 
+  const escapeCloseMovie = function (e) {
+    if (e.key === "Escape") {
+      onRemoveSelectedId();
+      console.log("close");
+    }
+  };
+
   useEffect(() => {
     const getMovie = async function () {
       try {
@@ -58,18 +66,19 @@ const SeletedMovie = function ({
     };
   }, [movie.Title]);
 
-  useEffect(() => {
-    const escapeCloseMovie = function (e) {
-      if (e.key === "Escape") {
-        onRemoveSelectedId();
-        console.log("close");
-      }
-    };
-    document.addEventListener("keydown", escapeCloseMovie);
-    return () => {
-      document.removeEventListener("keydown", escapeCloseMovie);
-    };
-  }, [onRemoveSelectedId]);
+  useKeyPress("keydown", escapeCloseMovie);
+  // useEffect(() => {
+  //   const escapeCloseMovie = function (e) {
+  //     if (e.key === "Escape") {
+  //       onRemoveSelectedId();
+  //       console.log("close");
+  //     }
+  //   };
+  //   document.addEventListener("keydown", escapeCloseMovie);
+  //   return () => {
+  //     document.removeEventListener("keydown", escapeCloseMovie);
+  //   };
+  // }, [onRemoveSelectedId]);
 
   useEffect(() => {
     if (rating) countTimeClickRating.current += 1;

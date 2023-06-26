@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import NavBar from "./components/NavBar/NavBar";
 import Main from "./components/Main/Main";
 import SearchBar from "./components/NavBar/SearchBar";
@@ -8,23 +8,21 @@ import MovieList from "./components/Main/ListContainer/MovieList";
 import Summary from "./components/Main/WatchedContainer/Summary";
 import WatchedMovieList from "./components/Main/WatchedContainer/WatchedMovieList";
 import SeletedMovie from "./components/Main/SeletedMovie";
-
-const KEY = "39c21a43";
+import { useMovies } from "./hooks/useMovies";
+import { useLocalStorage } from "./hooks/useLocalStorage";
 
 function App() {
   // run when component first mount -> render logic
   // never
-  const [movies, setMovies] = useState([]);
-  // const [watched, setWatched] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const [queryMovie, setQueryMovie] = useState("");
 
   const [selectedId, setSelectedId] = useState(null);
-  const [watched, setWatched] = useState(function () {
-    const watchedMovies = JSON.parse(localStorage.getItem("watched"));
-    return watchedMovies;
-  });
+  const [watched, setWatched] = useLocalStorage([], "watched");
+
+  const { movies, isLoading, error } = useMovies(
+    queryMovie,
+    removeSelectedIdHandler
+  );
 
   // function handler
   const queryMovieHandler = function (enteredQuery) {
@@ -36,11 +34,10 @@ function App() {
     setSelectedId((preId) => (preId === enteredId ? null : enteredId));
   };
 
-  const removeSelectedIdHandler = function () {
+  function removeSelectedIdHandler() {
     // document.title = `usePopcorn`;
-
     setSelectedId(null);
-  };
+  }
 
   const addMovieHandler = function (enteredMovie) {
     // document.title = `usePopcorn`;
@@ -81,47 +78,48 @@ function App() {
   //   };
   //   getData();
   // }, []);
-  useEffect(() => {
-    const controller = new AbortController();
-    const getData = async function () {
-      try {
-        setError("");
-        setIsLoading(true);
-        const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${KEY}&s=${queryMovie}`,
-          { signal: controller.signal }
-        );
-        if (!res.ok) {
-          throw new Error("Something Went Wrong !!!");
-        }
-        const data = await res.json();
-        if (data.Response === "False") {
-          throw new Error("Can not found any movies !!!");
-        }
-        setMovies(data.Search);
-        setError("");
-      } catch (err) {
-        err.name !== "AbortError" && setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    // search less than 3 characters => not show any errors
-    // if (queryMovie.length < 3) {
-    //   setMovies([]);
-    //   setError("");
-    // }
-    removeSelectedIdHandler();
-    getData();
-    // clean up function
-    return () => {
-      controller.abort();
-    };
-  }, [queryMovie]);
 
-  useEffect(() => {
-    localStorage.setItem("watched", JSON.stringify(watched));
-  }, [watched]);
+  // useEffect(() => {
+  //   const controller = new AbortController();
+  //   const getData = async function () {
+  //     try {
+  //       setError("");
+  //       setIsLoading(true);
+  //       const res = await fetch(
+  //         `http://www.omdbapi.com/?apikey=${KEY}&s=${queryMovie}`,
+  //         { signal: controller.signal }
+  //       );
+  //       if (!res.ok) {
+  //         throw new Error("Something Went Wrong !!!");
+  //       }
+  //       const data = await res.json();
+  //       if (data.Response === "False") {
+  //         throw new Error("Can not found any movies !!!");
+  //       }
+  //       setMovies(data.Search);
+  //       setError("");
+  //     } catch (err) {
+  //       err.name !== "AbortError" && setError(err.message);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+  //   // search less than 3 characters => not show any errors
+  //   // if (queryMovie.length < 3) {
+  //   //   setMovies([]);
+  //   //   setError("");
+  //   // }
+  //   removeSelectedIdHandler();
+  //   getData();
+  //   // clean up function
+  //   return () => {
+  //     controller.abort();
+  //   };
+  // }, [queryMovie]);
+
+  // useEffect(() => {
+  //   localStorage.setItem("watched", JSON.stringify(watched));
+  // }, []);
 
   //
   return (
