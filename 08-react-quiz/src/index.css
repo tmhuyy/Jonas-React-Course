@@ -53,7 +53,7 @@ body {
   font-size: 1.6rem;
   font-weight: 500;
   padding: 2rem;
-  background-color: #495057;
+  background-color: var(--color-dark);
   border-radius: 100px;
 }
 
