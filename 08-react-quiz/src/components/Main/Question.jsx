@@ -1,11 +1,12 @@
 import QuestionOption from "./QuestionOption";
-
+import Timer from "./Timer";
 const Question = function ({
   question,
   dispatch,
   enteredAnswer,
   currentQuestion,
   numberQuestions,
+  secondsRemaining,
 }) {
   const nextQuestionHandler = function () {
     // THE LAST QUESTION => FINISH SCREEN
@@ -16,7 +17,6 @@ const Question = function ({
     // NEXT QUESTION
     dispatch({ type: "NEXT_QUESTION" });
   };
-  console.log(enteredAnswer);
   return (
     <div>
       <h4>{question.question}</h4>
@@ -34,6 +34,7 @@ const Question = function ({
           );
         })}
       </div>
+      <Timer secondsRemaining={secondsRemaining} dispatch={dispatch} />
       {enteredAnswer !== null && (
         <button className="btn btn-ui" onClick={nextQuestionHandler}>
           {currentQuestion === numberQuestions ? "Finish" : "Next"}

@@ -9,7 +9,7 @@ import StartScreen from "./components/Main/StartScreen";
 import Question from "./components/Main/Question";
 import Progress from "./components/Main/Progress";
 import FinishScreen from "./components/Main/FinishScreen";
-
+const SECONDS_PER_QUESTION = 30;
 const initialState = {
   questions: [],
   // loading error ready active finished
@@ -18,16 +18,25 @@ const initialState = {
   points: 0,
   answer: null,
   highPoints: 0,
+  secondsRemaining: null,
 };
 
 const reducer = function (state, action) {
   switch (action.type) {
     case "LOAD_INITAL_QUESTIONS_SUCCESS":
-      return { ...state, questions: action.payload, status: "ready" };
+      return {
+        ...state,
+        questions: action.payload,
+        status: "ready",
+      };
     case "LOAD_INITAL_QUESTIONS_FAIL":
       return { ...state, status: "error" };
     case "START_QUESTION":
-      return { ...state, status: "active" };
+      return {
+        ...state,
+        status: "active",
+        secondsRemaining: state.questions.length * SECONDS_PER_QUESTION,
+      };
     case "RESTART_QUESTION":
       return {
         ...initialState,
@@ -59,6 +68,12 @@ const reducer = function (state, action) {
             ? state.points + points
             : state.points,
       };
+    case "REMOVE_ONE_SECOND":
+      return {
+        ...state,
+        secondsRemaining: state.secondsRemaining - 1,
+        status: state.secondsRemaining === 0 ? "finished" : state.status,
+      };
     default:
       throw new Error("Action unknown");
   }
@@ -70,7 +85,7 @@ function App() {
     (acc, question) => question.points + acc,
     0
   );
-  console.log(state);
+  console.log(state.secondsRemaining);
   useEffect(() => {
     const getQuestions = async function () {
       try {
@@ -112,6 +127,7 @@ function App() {
               enteredAnswer={state.answer}
               currentQuestion={state.currentQuestion + 1}
               numberQuestions={state.questions.length}
+              secondsRemaining={state.secondsRemaining}
             />
           </>
         )}
